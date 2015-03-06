@@ -1,0 +1,13 @@
+diff --git a/dune/grid/geometrygrid/grid.hh b/dune/grid/geometrygrid/grid.hh
+index 82b289b..4eb62bf 100644
+--- a/dune/grid/geometrygrid/grid.hh
++++ b/dune/grid/geometrygrid/grid.hh
+@@ -660,7 +660,7 @@ namespace Dune
+     template< PartitionIteratorType pitype >
+     typename Partition< pitype >::LeafGridView leafGridView () const
+     {
+-      return leafGridView<pitype>();
++      return leafView<pitype>();
+     }
+ 
+     /** \brief View for a grid level for All_Partition */

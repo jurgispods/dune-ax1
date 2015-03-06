@@ -1,0 +1,11 @@
+membrane4 short description:
+
+Modeling a thick membrane separating two electrolytes.
+
+Searching for stationary solutions, therefore solving the Poisson Boltzmann equation.
+
+One dimension (using OneDGrid) with constraints (Dirichlet BC).
+
+Convergence is investigated for increasing refinement levels by comparison to analytical solutions.
+
+Example with non-symmetrical ion distribution Cl/Ca

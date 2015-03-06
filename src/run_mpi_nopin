@@ -1,0 +1,19 @@
+#!/bin/bash
+
+np=24
+
+configfile=$1
+logfile=`echo $1 | sed -e 's/config/log/g'`
+
+if [ $# -lt 2 ]
+then
+  tend=20e3
+else
+  tend=$3
+fi
+
+echo "Using config file: $configfile"
+echo "Using log file: $logfile"
+echo "Starting simulation using $np processes until tend=${tend}!"
+
+sh -c "( (nohup mpirun -report-bindings -np $np ./acme2_cyl_par 0 1 20e3 $configfile 2>&1 >$logfile </dev/null) & )"

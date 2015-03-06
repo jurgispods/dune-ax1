@@ -1,0 +1,14 @@
+DGF
+
+INTERVAL
+0 0
+1e+07 1e+07
+1 287
+# INTERVAL
+
+GRIDPARAMETER
+name Yasp_BaseGrid
+overlap 1
+# GRIDPARAMETER
+
+# DGF

@@ -1,0 +1,60 @@
+#!/bin/bash
+
+if [ $# -lt 1 ]
+then
+	parseDir='.'
+else
+	parseDir=$(echo | awk -v path=$1 '{n = split(path,a,"/"); for (i = 1 ; i < n; i++) folder = folder "/" a[i]; print folder}')
+	if [ -z "$parseDir" ]
+	then
+		parseDir='.'
+	fi
+	parseFile=$(echo | awk -v path=$1 '{n = split(path,a,"/"); print a[n]}')
+fi
+
+echo "Processing directory: $parseDir"
+echo "Using file $parseFile to determine time values"
+
+if [ ! -e $parseDir/timesteps.dat ] || [ $parseDir/$parseFile -nt $parseDir/timesteps.dat ]
+then
+	# Get output file pattern by parsing $parseFile
+	echo 'Parsing '$parseFile'...'
+	# Grep for token '# time' and dump the corresponding line together with its line number (option -n), then split the output and throw away the middle part from the grep output
+	grep -n "# time" $parseDir/$parseFile | awk '{split($0,a,":"); print a[1] a[3]}' > $parseDir/timesteps.dat
+	# This cryptic command picks out the first two lines of the written timestep file (NR=number of records) and splits it, reading in only the first column (line number). It then stores the line number read last in 'last' and the previous one in 'p'. Note that this could probably be done in an easier way. However, it fulfills its needs, and in the end we can calculate the line difference 'last-p' to obtain the number of lines per time step in the parsed file
+	nLines=$(cat $parseDir/timesteps.dat | awk -F, 'NR>=1 && NR<=2 { split($0,a," "); p=last; last=a[1];} END {print last-p}')
+	# Previous version of the above command, the last call to split is probably superfluous
+	#		nLines=$(cat $parseDir/timesteps.dat | awk -F, 'NR>=1 && NR<=2 { split($0,a," "); p=last; last=a[1];} END {split($0,a," "); print last-p}')
+	if [ $nLines -lt 1 ]
+	then
+		# There are no '# time' tokens in this file; assume this is a format compatible to memb_pot.dat; in this case, we don't need the line numbers, but we dump them anyway.
+		cat -n $parseDir/$parseFile | awk '{split($0,a," "); printf "%d %10.6f\n", a[1], a[2]} ' > $parseDir/timesteps.dat
+		nLines=$(wc -l $parseDir/timesteps.dat | awk '{split($0,a," "); print a[1]}')
+	fi
+	echo "Number of lines: $nLines"
+	nBlanks=$(cat $parseDir/$parseFile | awk -v maxLine="$nLines" 'NR>=1 && NR<=maxLine && !NF {print NR}' | wc -l)
+	echo $nBlanks
+	# This is the number of points per timestep in the output file
+	points=$[$nLines - $nBlanks -1]
+	pointsY=$[$nBlanks-1]
+	pointsX=$[$points/$pointsY]
+	echo $pointsX $pointsY $points > $parseDir/points.dat
+
+	# Get special flux output file pattern by parsing 'flux_na.dat'
+	echo 'Parsing flux_na.dat...'
+	grep -n "# time" $parseDir/flux_na.dat | awk '{split($0,a,":"); print a[1] a[3]}' > $parseDir/flux_timesteps.dat
+	nLines=$(cat $parseDir/flux_timesteps.dat | awk -F, 'NR>=1 && NR<=2 { split($0,a," "); p=last; last=a[1];} END {split($0,a," "); print last-p}')
+	echo $nLines
+	nBlanks=$(cat $parseDir/flux_na.dat | awk -v maxLine="$nLines" 'NR>=1 && NR<=maxLine && !NF {print NR}' | wc -l)
+	echo $nBlanks
+	# This is the number of points per timestep in the output file
+	points=$[$nLines - $nBlanks -1]
+	pointsY=$[$nBlanks-1]
+	pointsX=$[$points/$pointsY]
+	echo $pointsX $pointsY $points > $parseDir/flux_points.dat
+
+	#cat $parseDir/timesteps.dat | awk -F, 'NR>=1 && NR<=2 {split($0,a,":"); diff=a[2]-[a1] print $parseDir}'
+	#awk -F, 'NR>1000 && NR<=2000 && NF==19 {print $parseDir}'
+else
+	echo "There is a newer version of timesteps.dat available, nothing done."
+fi

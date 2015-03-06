@@ -1,0 +1,11 @@
+################################
+# Dune module information file #
+################################
+
+#Name of the module
+Module: dune-ax1
+Version: 0.1
+Maintainer: jurgis.pods@iwr.uni-heidelberg.de
+#depending on 
+Depends: dune-common dune-geometry dune-istl dune-grid dune-localfunctions dune-pdelab dune-multidomaingrid dune-multidomain
+#Suggests: dune-subgrid dune-spgrid

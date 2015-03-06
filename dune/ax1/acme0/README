@@ -1,0 +1,13 @@
+acme0:
+
+A single OneDGrid with or without membrane for solving the instationary Poisson-Nernst-Planck system
+
+Numerical methods: 
+- Standard Galerkin (CG) or Discontinuous Galerkin (DG) local operators
+- Fully-coupled solution (via Newton's method) or operator-split (alternating solution of the equations)
+
+Limitations:
+When using the membrane, none of the methods is working satisfactory:
+- CG method does not allow for a jump of concentrations at the membrane
+- For fully-coupled case, usage of a membrane is not possible
+- operator-split is unstable even when not using a membrane

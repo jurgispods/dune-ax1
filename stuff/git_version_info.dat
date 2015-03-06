@@ -1,0 +1,119 @@
+----- using default flags $CONFIGURE_FLAGS from /Users/jpods/workspace/parallel/ax1_mac_parallel.opts -----
+--- going to build dune-common dune-geometry dune-istl dune-grid dune-localfunctions dune-typetree dune-pdelab dune-multidomaingrid dune-multidomain dune-ax1  ---
+WARNING: commandline parameters will overwrite setting in opts file "/Users/jpods/workspace/parallel/ax1_mac_parallel.opts"
+--- calling git for dune-common ---
+commit 9d441c81886ae3c930d2355f2693874fdbf83673
+Author: Markus Blatt <markus@dr-blatt.de>
+Date:   Tue Aug 26 12:39:20 2014 +0200
+
+    [bugfix] include memory header to make make_shared available.
+    
+    According to the standard make_shared is defined in the memory header.
+    While we did include the header when testing for make_shared support, we
+    forgot to include it in dune/common/shared_ptr.hh. This patch now uses the
+    same include statement for memory in dune/common/shared_ptr.h as in the
+    m4 test.
+    
+    This problem does only exist in the release as Christoph already fixed in the
+    trunk while stripping our own make_shared implementation.
+    
+    Kudos to Tatiana and Eike for finding this bug!
+--- dune-common done ---
+WARNING: commandline parameters will overwrite setting in opts file "/Users/jpods/workspace/parallel/ax1_mac_parallel.opts"
+--- calling git for dune-geometry ---
+commit 8e5075fc4c58e116d4a0f003a4d1f0482a3ab618
+Author: Markus Blatt <markus@dr-blatt.de>
+Date:   Tue Jun 3 16:12:54 2014 +0200
+
+    Bounce version number to 2.3.1
+--- dune-geometry done ---
+WARNING: commandline parameters will overwrite setting in opts file "/Users/jpods/workspace/parallel/ax1_mac_parallel.opts"
+--- calling git for dune-istl ---
+commit 1cd1f6381d1412a1ce716c25da53aecc9bfb2101
+Author: Ansgar Burchardt <burchardt@igpm.rwth-aachen.de>
+Date:   Wed Jun 25 17:42:24 2014 +0200
+
+    [CMake] add_dune_superlu_flags: Add OBJECT parameter
+    
+    (cherry picked from commit 0beab99ff18d89a399bcfd83189a0420323fe360)
+    Signed-off-by: Christoph Grüninger <gruenich@dune-project.org>
+--- dune-istl done ---
+WARNING: commandline parameters will overwrite setting in opts file "/Users/jpods/workspace/parallel/ax1_mac_parallel.opts"
+--- calling git for dune-grid ---
+commit b43ca94942c8b74b036bd712b1cbe22d085ae1d4
+Author: Steffen Müthing <muething@dune-project.org>
+Date:   Tue Jul 1 13:55:38 2014 +0200
+
+    [MCMGMapper][Bugfix] Fix assertion to check whether GeometryType is part of the mapper
+    
+    The assertion "GlobalGeometryTypeIndex::index(gt) < n" doesn't make
+    sense, as n refers to the number of entities in the mapper and not to
+    the indexed GeometryTypes.
+    
+    Fixed by simply reusing the method contains() conveniently provided by
+    the layout... ;-)
+    
+    While I was at it, I also added an equivalent assertion to the plain
+    map() method that maps an entity itself.
+--- dune-grid done ---
+WARNING: commandline parameters will overwrite setting in opts file "/Users/jpods/workspace/parallel/ax1_mac_parallel.opts"
+--- calling git for dune-localfunctions ---
+commit eedfe2a7639be4a7e6dc457fc5181454088aebe0
+Author: Markus Blatt <markus@dr-blatt.de>
+Date:   Tue Jun 3 16:12:54 2014 +0200
+
+    Bounce version number to 2.3.1
+--- dune-localfunctions done ---
+WARNING: commandline parameters will overwrite setting in opts file "/Users/jpods/workspace/parallel/ax1_mac_parallel.opts"
+--- calling git for dune-typetree ---
+commit ecffa10c59fa61a0071e7c788899464b0268719f
+Author: Steffen Müthing <muething@dune-project.org>
+Date:   Wed Jul 23 17:49:24 2014 +0200
+
+    [CMake] add version defines to the config.h.cmake
+    
+    When checking for a certain dune-typetree version using
+    DUNE_VERSION_NEWER, the defines where not present and
+    the makro did not work.
+    
+    Kudos to Andreas Nüßing for noticing the problem and providing a patch
+    for PDELab.
+--- dune-typetree done ---
+WARNING: commandline parameters will overwrite setting in opts file "/Users/jpods/workspace/parallel/ax1_mac_parallel.opts"
+--- calling git for dune-pdelab ---
+commit 6d34db80a09b95f5218d95c0ffe88d3f3d25a3f8
+Author: Steffen Müthing <muething@dune-project.org>
+Date:   Wed Dec 3 17:44:28 2014 +0100
+
+    [ISTL] Fix nested pattern generation for the new BCRS matrix backend
+    
+    This patch fixes the creation of nested patterns (for nested BCRS
+    matrices).
+--- dune-pdelab done ---
+WARNING: commandline parameters will overwrite setting in opts file "/Users/jpods/workspace/parallel/ax1_mac_parallel.opts"
+--- calling git for dune-multidomaingrid ---
+commit 1cc143d52e6875e120dbc9d20faad50fee1f9ecd
+Author: Steffen Müthing <muething@dune-project.org>
+Date:   Wed Nov 26 03:50:21 2014 +0100
+
+    Bump version to 2.3.1
+--- dune-multidomaingrid done ---
+WARNING: commandline parameters will overwrite setting in opts file "/Users/jpods/workspace/parallel/ax1_mac_parallel.opts"
+--- calling git for dune-multidomain ---
+commit 631d8e4bfd336ec095d763ec9f15b287f57ca7eb
+Author: Steffen Müthing <muething@dune-project.org>
+Date:   Thu Dec 11 02:20:17 2014 +0100
+
+    [Version] Bump to 2.0.1
+    
+    Fix a stupid typo that prevented the autotools from working.
+--- dune-multidomain done ---
+WARNING: commandline parameters will overwrite setting in opts file "/Users/jpods/workspace/parallel/ax1_mac_parallel.opts"
+--- calling git for dune-ax1 ---
+commit 615b258d049a7715f1741d6ee2ccf85749242bba
+Author: Jurgis Pods <jpods@dune-project.org>
+Date:   Wed Dec 17 13:10:31 2014 +0100
+
+    [pdelab2.0] update
+--- dune-ax1 done ---
+--- done ---

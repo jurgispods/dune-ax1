@@ -1,0 +1,13 @@
+membrane1 short description:
+
+First attempt to model a membrane separating two electrolytes.
+
+Searching for stationary solutions, therefore solving the Poisson Boltzmann equation.
+
+One dimension (using OneDGrid) with no constraints (zero Neumann conditions - physically unrealistic).
+
+new headers:
+
+constants.hh
+electrolyte.hh
+output.hh

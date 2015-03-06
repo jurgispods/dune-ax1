@@ -1,0 +1,2 @@
+CONFIGURE_FLAGS="--with-superlu --with-ug=/home/jpods/workspace/UG --with-boost=/home/jpods/workspace/boost-1.50 --enable-fieldvector-size-is-method --with-hdf5=/usr"
+#CONFIGURE_FLAGS="--with-superlu CXX=\"gccfilter -c g++\" CC=\"gccfilter -c -r -w gcc\""

@@ -1,0 +1,26 @@
+diff --git a/dune/istl/test/Makefile.am b/dune/istl/test/Makefile.am
+index 5c67bfb..e272ee2 100644
+--- a/dune/istl/test/Makefile.am
++++ b/dune/istl/test/Makefile.am
+@@ -164,6 +164,21 @@ if MPI
+ 	${DUNEMPILIBS}				\
+ 	$(LDADD)
+ endif
++
++
++if MPI
++  mv_CPPFLAGS = $(AM_CPPFLAGS)    \
++        $(DUNEMPICPPFLAGS)                      \
++        ${PARMETIS_CPPFLAGS}
++  mv_LDFLAGS = $(AM_LDFLAGS)      \
++        $(DUNEMPILDFLAGS)                       \
++        ${PARMETIS_LDFLAGS}
++  mv_LDADD =                      \
++        ${PARMETIS_LDFLAGS} ${PARMETIS_LIBS}    \
++        ${DUNEMPILIBS}                          \
++        $(LDADD)
++endif
++
+ include $(top_srcdir)/am/global-rules
+ 
+ EXTRA_DIST = CMakeLists.txt
