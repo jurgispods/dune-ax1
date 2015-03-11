@@ -1,0 +1,53 @@
+From f52ef9b70be5ec0b150ce0d2a69c568e82ab44d2 Mon Sep 17 00:00:00 2001
+From: Jurgis Pods <jpods@dune-project.org>
+Date: Thu, 18 Jul 2013 15:54:23 +0200
+Subject: [PATCH] [RestartedGMRes solver] Use preconditioned residual for
+ initial defect
+
+This is essentially equivalent to Uli Sack's patch from Flyspray task FS#1202, ported to the current master.
+
+Currently, GMRes is inconsistent when comparing current ('norm') and initial defect ('norm_0'). While the current residual is taken from the preconditioned residual, the initial defect - at least in the case the flag '_recalc_defect' is not set, which is the default - is taken from the unpreconditioned residual.
+
+This causes the following problems:
+1) The calculated reduction is wrong.
+2) The solver might even exit in iteration 0 (without entering the iteration loop) because 'norm' and 'norm_0' differ by a factor greater than the requested reduction, returning a zero update 'x'.
+
+By using the preconditioned residual in any case, the defect calculation is made consistent again.
+---
+ dune/istl/solvers.hh | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/dune/istl/solvers.hh b/dune/istl/solvers.hh
+index 27f1918..d19e059 100644
+--- a/dune/istl/solvers.hh
++++ b/dune/istl/solvers.hh
+@@ -1140,7 +1140,7 @@ namespace Dune {
+       {
+         // norm_0 = norm(M^-1 b)
+         w = 0.0; _M.apply(w,b); // w = M^-1 b
+-        norm_0 = _sp.norm(w);
++        norm_0 = _sp.norm(w); // use defect of preconditioned residual
+         // r = _M.solve(b - A * x);
+         w = b;
+         _A_.applyscaleadd(-1,x, /* => */ w); // w = b - Ax;
+@@ -1151,15 +1151,15 @@ namespace Dune {
+       {
+         // norm_0 = norm(b-Ax)
+         _A_.applyscaleadd(-1,x, /* => */ b); // b = b - Ax;
+-        norm_0 = _sp.norm(b);
+         v[0] = 0.0; _M.apply(v[0],b); // r = M^-1 b
+         beta = _sp.norm(v[0]);
++        norm_0 = beta; // use defect of preconditioned residual
+       }
+ 
+       // avoid division by zero
+       if (norm_0 == 0.0)
+         norm_0 = 1.0;
+-      norm = norm_old = _sp.norm(v[0]);
++      norm = norm_old = beta;
+ 
+       // print header
+       if (_verbose > 0)
+-- 
+1.8.1.2
+

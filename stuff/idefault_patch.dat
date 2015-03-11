@@ -1,0 +1,27 @@
+diff --git a/dune/pdelab/localoperator/defaultimp.hh b/dune/pdelab/localoperator/defaultimp.hh
+index 374e08c..e4a9f09 100644
+--- a/dune/pdelab/localoperator/defaultimp.hh
++++ b/dune/pdelab/localoperator/defaultimp.hh
+@@ -63,6 +63,7 @@ namespace Dune {
+         ResidualView downview = down.weightedAccumulationView(mat.weight());
+         ResidualView upview = up.weightedAccumulationView(mat.weight());
+ 
++        //std::cout << "Numerical jacobian_volume @ "<< eg.geometry().center() << std::endl;
+ 
+         asImp().alpha_volume(eg,lfsu,u,lfsv,downview);
+         for (int j=0; j<n; j++) // loop over columns
+@@ -72,7 +73,14 @@ namespace Dune {
+           u(lfsu,j) += delta;
+           asImp().alpha_volume(eg,lfsu,u,lfsv,upview);
+           for (int i=0; i<m; i++)
++          {
++            if(eg.geometry().center()[1] > 500. && eg.geometry().center()[1] < 505.)
++            {
++              std::cout << "  mat(" << i << ", " << j << "): up=" << up(lfsv,i)
++                << ", down=" << down(lfsv,i) << " --> " << ((up(lfsv,i)-down(lfsv,i))/delta) << std::endl;
++            }
+             mat.rawAccumulate(lfsv,i,lfsu,j,(up(lfsv,i)-down(lfsv,i))/delta);
++          }
+           u(lfsu,j) = x(lfsu,j);
+         }
+       }

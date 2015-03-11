@@ -1,0 +1,39 @@
+diff --git a/dune/istl/solvers.hh b/dune/istl/solvers.hh
+index d19e059..62eb796 100644
+--- a/dune/istl/solvers.hh
++++ b/dune/istl/solvers.hh
+@@ -1258,7 +1258,7 @@ namespace Dune {
+         }
+ 
+         //correct i which is wrong if convergence was not achieved.
+-        j=std::min(_maxit,j);
++        //j=std::min(_maxit,j);
+ 
+         if (_verbose > 1)             // print
+         {
+diff --git a/dune/istl/test/Makefile.am b/dune/istl/test/Makefile.am
+index c0de463..362d711 100644
+--- a/dune/istl/test/Makefile.am
++++ b/dune/istl/test/Makefile.am
+@@ -142,6 +142,21 @@ if MPI
+ 	${DUNEMPILIBS}				\
+ 	$(LDADD)
+ endif
++
++
++if MPI
++  mv_CPPFLAGS = $(AM_CPPFLAGS)    \
++        $(DUNEMPICPPFLAGS)                      \
++        ${PARMETIS_CPPFLAGS}
++  mv_LDFLAGS = $(AM_LDFLAGS)      \
++        $(DUNEMPILDFLAGS)                       \
++        ${PARMETIS_LDFLAGS}
++  mv_LDADD =                      \
++        ${PARMETIS_LDFLAGS} ${PARMETIS_LIBS}    \
++        ${DUNEMPILIBS}                          \
++        $(LDADD)
++endif
++
+ include $(top_srcdir)/am/global-rules
+ 
+ EXTRA_DIST = CMakeLists.txt

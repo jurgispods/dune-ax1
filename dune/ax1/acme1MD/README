@@ -1,0 +1,10 @@
+acme1MD:
+
+Going dune-multidomain!
+
+Numerical methods: 
+- Standard Galerkin (CG) local operators
+- Fully-coupled solution of the whole system including membrane
+
+Limitations:
+- Not fully implemented yet! 

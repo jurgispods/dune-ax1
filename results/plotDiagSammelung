@@ -1,0 +1,20 @@
+#!/usr/bin/gnuplot -persist
+# set terminal pdfcairo landscape noenhanced monochrome \
+#              dashed defaultplex "Helvetica" 14
+# set output 'output.ps'
+#set xlabel "x" 0.000000,0.000000  ""
+#set ylabel "y=exp(-x)" 0.000000,0.000000  ""
+#set title "Pade approximation" 0.000000,0.000000  ""
+#set xrange [ 0 : 2 ] noreverse nowriteback
+#set yrange [ 0 : 1 ] noreverse nowriteback
+#set mxtics 5.000000
+#set mytics 5.000000
+#set xtics border mirror norotate 1
+#set ytics border mirror norotate 0.5
+
+set style data lines
+
+plot "diag_sammelung.dat" index 0 using 1:6 title "Na L2 error" w l
+
+
+#    EOF

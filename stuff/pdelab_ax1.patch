@@ -1,0 +1,141 @@
+diff --git a/dune/pdelab/backend/novlpistlsolverbackend.hh b/dune/pdelab/backend/novlpistlsolverbackend.hh
+index 7bbf210..2122eeb 100644
+--- a/dune/pdelab/backend/novlpistlsolverbackend.hh
++++ b/dune/pdelab/backend/novlpistlsolverbackend.hh
+@@ -857,6 +857,32 @@ namespace Dune {
+     {}
+   };
+ 
++
++  /**
++  * @brief Nonoverlapping parallel BiCGSTAB solver preconditioned by ILUn.
++  * @tparam GO The type of the grid operator
++  * (or the fakeGOTraits class for the old grid operator space).
++  */
++  template<class GO>
++  class ISTLBackend_NOVLP_BCGS_ILUn
++    : public ISTLBackend_NOVLP_BASE_PREC<GO,Dune::SeqILUn, Dune::BiCGSTABSolver>
++  {
++      typedef typename GO::Traits::TrialGridFunctionSpace GFS;
++    public:
++      /*! \brief make a linear solver object
++
++      \param[in] gfs_ a grid function space
++      \param[in] maxiter_ maximum number of iterations to do
++      \param[in] level_ level n for ILUn preconditioner
++      \param[in] verbose_ print messages if true
++      */
++      explicit ISTLBackend_NOVLP_BCGS_ILUn (const GO& grid_operator_, unsigned maxiter_=5000,
++                                            int level_=1, int verbose_=1)
++      : ISTLBackend_NOVLP_BASE_PREC<GO,Dune::SeqILUn, Dune::BiCGSTABSolver>(grid_operator_, maxiter_, level_, verbose_)
++      {}
++  };
++
++
+   /**
+    * @brief Nonoverlapping parallel CG solver preconditioned by block SSOR.
+    */
+diff --git a/dune/pdelab/backend/ovlpistlsolverbackend.hh b/dune/pdelab/backend/ovlpistlsolverbackend.hh
+index fb1de8b..3ac0698 100644
+--- a/dune/pdelab/backend/ovlpistlsolverbackend.hh
++++ b/dune/pdelab/backend/ovlpistlsolverbackend.hh
+@@ -195,7 +195,7 @@ namespace Dune {
+     template<class GFS, class M, class X, class Y>
+     class SuperLUSubdomainSolver : public Dune::Preconditioner<X,Y>
+     {
+-      typedef typename M::BaseT ISTLM;
++      typedef typename istl::raw_type<M>::type ISTLM;
+
+     public:
+       //! \brief The domain type of the preconditioner.
+@@ -606,6 +606,29 @@ namespace Dune {
+         : ISTLBackend_OVLP_ILU0_Base<GFS,CC,Dune::BiCGSTABSolver>(gfs, cc, maxiter, verbose)
+       {}
+     };
++
++    /**
++     * @brief Overlapping parallel CG solver with ILU0 preconditioner
++     * @tparam GFS The Type of the GridFunctionSpace.
++     * @tparam CC The Type of the Constraints Container.
++     */
++    template<class GFS, class CC>
++    class ISTLBackend_OVLP_CG_ILU0
++      : public ISTLBackend_OVLP_ILU0_Base<GFS,CC,Dune::CGSolver>
++    {
++    public:
++      /*! \brief make a linear solver object
++
++        \param[in] gfs a grid function space
++        \param[in] cc a constraints container object
++        \param[in] maxiter maximum number of iterations to do
++        \param[in] verbose print messages if true
++      */
++      ISTLBackend_OVLP_CG_ILU0 (const GFS& gfs, const CC& cc, unsigned maxiter=5000, int verbose=1)
++        : ISTLBackend_OVLP_ILU0_Base<GFS,CC,Dune::CGSolver>(gfs, cc, maxiter, verbose)
++      {}
++    };
++
+     /**
+      * @brief Overlapping parallel BiCGStab solver with ILU0 preconditioner
+      * @tparam GFS The Type of the GridFunctionSpace.
+diff --git a/dune/pdelab/newton/newton.hh b/dune/pdelab/newton/newton.hh
+index 6ef9dd0..d571b81 100644
+--- a/dune/pdelab/newton/newton.hh
++++ b/dune/pdelab/newton/newton.hh
+@@ -459,7 +459,7 @@ namespace Dune
+                     if ( stop_defect/(10*this->res.defect) >
+                          this->res.defect*this->res.defect/(this->prev_defect*this->prev_defect) )
+                         this->linear_reduction =
+-                            stop_defect/(10*this->res.defect);
++                            std::min(min_linear_reduction,stop_defect/(10*this->res.defect));
+                     else
+                         this->linear_reduction =
+                             std::min(min_linear_reduction,this->res.defect*this->res.defect/(this->prev_defect*this->prev_defect));
+@@ -493,7 +493,8 @@ namespace Dune
+         public:
+             enum Strategy { noLineSearch,
+                             hackbuschReusken,
+-                            hackbuschReuskenAcceptBest };
++                            hackbuschReuskenAcceptBest,
++                            hackbuschReuskenAcceptBestNoThrow };
+ 
+             NewtonLineSearch(GridOperator& go, TrialVector& u_)
+                 : NewtonBase<GOS,TrlV,TstV>(go,u_)
+@@ -603,6 +604,20 @@ namespace Dune
+                                 this->defect(r);
+                             }
+                             break;
++                        case hackbuschReuskenAcceptBestNoThrow:
++                            if (best_lambda == 0.0)
++                            {
++                                *this->u = prev_u;
++                                this->defect(r);
++                                // No throw here!
++                            }
++                            if (best_lambda != lambda)
++                            {
++                                *this->u = prev_u;
++                                this->u->axpy(-best_lambda, z);
++                                this->defect(r);
++                            }
++                            break;
+                         case noLineSearch:
+                             break;
+                         }
+diff --git a/dune/pdelab/ordering/orderingbase.hh b/dune/pdelab/ordering/orderingbase.hh
+index 0f30dce..195861a 100644
+--- a/dune/pdelab/ordering/orderingbase.hh
++++ b/dune/pdelab/ordering/orderingbase.hh
+@@ -88,7 +88,12 @@ namespace Dune {
+         std::fill(_child_size_offsets.begin(),_child_size_offsets.end(),0);
+         std::fill(_child_block_offsets.begin(),_child_block_offsets.end(),0);
+         _codim_used.reset();
++#ifdef MULTIPLE_MEMBRANE_ELEMENTS
++        _codim_fixed_size.reset(); // hack
++        //_codim_fixed_size.set();
++#else
+         _codim_fixed_size.set();
++#endif
+         _max_local_size = 0;
+         _block_count = 0;
+         typename Traits::SizeType block_carry = 0;

@@ -1,0 +1,2 @@
+Tests for:
+- Correct dynamic behaviour of the channel classes (give current pulse and check for correct voltage response)

@@ -1,0 +1,118 @@
+USE_CMAKE=no DUNE_BUILDDIR=
+/usr/local/lib/dunecontrol/dune-istl: file not found
+/usr/local/lib/dunecontrol/dune-common: file not found
+--- going to build dune-common dune-istl dune-geometry dune-grid dune-localfunctions dune-pdelab dune-multidomaingrid dune-multidomain dune-ax1  ---
+--- calling git for dune-common ---
+commit 9f1a4ee3f95a5281c5fdfd392344d76813eb8260
+Author: Markus Blatt <markus@dr-blatt.de>
+Date:   Tue Jun 11 20:53:44 2013 +0200
+
+    [dunecontrol][CMake] Support quoting flags with single quotes during conversion.
+--- dune-common done ---
+--- calling git for dune-istl ---
+commit f52ef9b70be5ec0b150ce0d2a69c568e82ab44d2
+Author: Jurgis Pods <jpods@dune-project.org>
+Date:   Thu Jul 18 15:54:23 2013 +0200
+
+    [RestartedGMRes solver] Use preconditioned residual for initial defect
+    
+    This is essentially equivalent to Uli Sack's patch from Flyspray task FS#1202, ported to the current master.
+    
+    Currently, GMRes is inconsistent when comparing current ('norm') and initial defect ('norm_0'). While the current residual is taken from the preconditioned residual, the initial defect - at least in the case the flag '_recalc_defect' is not set, which is the default - is taken from the unpreconditioned residual.
+    
+    This causes the following problems:
+    1) The calculated reduction is wrong.
+    2) The solver might even exit in iteration 0 (without entering the iteration loop) because 'norm' and 'norm_0' differ by a factor greater than the requested reduction, returning a zero update 'x'.
+    
+    By using the preconditioned residual in any case, the defect calculation is made consistent again.
+--- dune-istl done ---
+--- calling git for dune-geometry ---
+commit 08b94410f71025108e982de9fa4949d495746ede
+Author: Markus Blatt <markus@dr-blatt.de>
+Date:   Wed Jun 5 14:55:55 2013 +0200
+
+    [CMake] Guess build directory of dune-common
+    
+    Previously we relied on CMake's export(PACKAGE ...) function when
+    finding dune packages without dune-control. This is error prone
+    when using several instances of a dune-module (either with differing
+    versions or built using different options). In this case there is no
+    control which of the instances is used.
+    
+    Now we try to guess the correct build directory, if it was not
+    provided with ${module}_DIR, ${module}_Root or in the
+    CMAKE_PREFIX_PATH. Note that when using dunecontrol ${module}_DIR will
+    always be set. We take the path of the current toplevel build
+    directory and simply substitute any occurence of the name of current
+    module with name of the module that we try to find. This works for
+    both  building in a subdirectory of the source tree
+    (e.g. ${module-source}/build-cmake) or in a sibling directory
+--- dune-geometry done ---
+--- calling git for dune-grid ---
+commit 47d51011af24d4bb560f4921cf3c735c5059056d
+Merge: 0981e16 c1e5370
+Author: Markus Blatt <markus@dr-blatt.de>
+Date:   Thu Jun 6 12:41:06 2013 +0200
+
+    Merge branch 'feature/FS1306-cmake-guess-builddir'
+    
+    This merge allows us to get rid off the dubious export(PACKAGE ...)
+    functionality that gives us now control what module instance is found
+    (apart from the correct version).
+--- dune-grid done ---
+--- calling git for dune-localfunctions ---
+commit 0ba740c3bc4bd59916d4521975c312c14b2090b3
+Author: Markus Blatt <markus@dr-blatt.de>
+Date:   Wed Jun 5 15:02:40 2013 +0200
+
+    [CMake] Guess build directory of dune-common
+    
+    Previously we relied on CMake's export(PACKAGE ...) function when
+    finding dune packages without dune-control. This is error prone
+    when using several instances of a dune-module (either with differing
+    versions or built using different options). In this case there is no
+    control which of the instances is used.
+    
+    Now we try to guess the correct build directory, if it was not
+    provided with ${module}_DIR, ${module}_Root or in the
+    CMAKE_PREFIX_PATH. Note that when using dunecontrol ${module}_DIR will
+    always be set. We take the path of the current toplevel build
+    directory and simply substitute any occurence of the name of current
+    module with name of the module that we try to find. This works for
+    both  building in a subdirectory of the source tree
+    (e.g. ${module-source}/build-cmake) or in a sibling directory
+--- dune-localfunctions done ---
+--- calling git for dune-pdelab ---
+commit f2e997429c5b103ef9b8684cb3a1ba26c0e01bf8
+Merge: 0fba507 44e2380
+Author: Jurgis Pods <jpods@dune-project.org>
+Date:   Wed Jul 24 12:59:04 2013 +0200
+
+    Merge branch 'master' of http://git.dune-project.org/repositories/dune-pdelab
+--- dune-pdelab done ---
+--- calling git for dune-multidomaingrid ---
+commit a4b09a82087615e2a8d8a0007cb3ed3ab88a7fc6
+Author: Steffen Müthing <muething@dune-project.org>
+Date:   Thu Jun 13 18:53:00 2013 +0200
+
+    [IndexSet] Make sure it is possible to query sizes for unsupported codimensions
+    
+    Just return 0 for those codims. Required for compatibility with PDELab master.
+--- dune-multidomaingrid done ---
+--- calling git for dune-multidomain ---
+commit a61c621fc9f9fa962e459ae93a5ae4eb42a47b20
+Author: Steffen Müthing <muething@dune-project.org>
+Date:   Thu Jun 13 15:02:02 2013 +0200
+
+    [MDGFS] Oh well, of we course we should register the tag, not the actual GFS type
+    
+    Fixes the fix in 534287f.
+--- dune-multidomain done ---
+--- calling git for dune-ax1 ---
+commit 26912a7e8ed917479d035d853edfe07a7ab19c7f
+Author: Jurgis Pods <jpods@dune-project.org>
+Date:   Mon Nov 17 17:01:44 2014 +0100
+
+    [Patches] Added missing patches for other modules (multidomain, istl)
+--- dune-ax1 done ---
+--- done ---

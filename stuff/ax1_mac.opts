@@ -1,0 +1,1 @@
+CONFIGURE_FLAGS="--with-superlu=/Users/jpods/workspace/SuperLU_4.3 --with-superlu-lib=libsuperlu_4.3.a --enable-fieldvector-size-is-method --with-ug=/opt/UG --with-hdf5=/opt/local"

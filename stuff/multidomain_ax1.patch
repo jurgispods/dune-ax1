@@ -1,0 +1,100 @@
+diff --git a/dune/pdelab/multidomain/gridoperator.hh b/dune/pdelab/multidomain/gridoperator.hh
+index 8345c60..75f9522 100644
+--- a/dune/pdelab/multidomain/gridoperator.hh
++++ b/dune/pdelab/multidomain/gridoperator.hh
+@@ -58,7 +58,11 @@ public:
+     JF,
+     CU,
+     CV,
++#if USE_OVERLAP == 0
++    GlobalAssembler<GFSU,GFSV,true>, // dirty hack for nonoverlapping case
++#else
+     GlobalAssembler<GFSU,GFSV>,
++#endif
+     LocalAssembler<GridOperator,AssemblyParticipants...>
+     > Traits;
+
+diff --git a/dune/pdelab/multidomain/multidomaingridfunctionspace.hh b/dune/pdelab/multidomain/multidomaingridfunctionspace.hh
+index 9e1f5b1..5226549 100644
+--- a/dune/pdelab/multidomain/multidomaingridfunctionspace.hh
++++ b/dune/pdelab/multidomain/multidomaingridfunctionspace.hh
+@@ -43,6 +43,8 @@ struct MultiDomainGridFunctionSpaceTraits
+   //! \brief vector backend
+   typedef B Backend;
+
++  typedef B BackendType;
++
+   //! \brief mapper
+   typedef M MapperType;
+
+diff --git a/dune/pdelab/multidomain/subproblemlocalfunctionspace.hh b/dune/pdelab/multidomain/subproblemlocalfunctionspace.hh
+index 302af77..c467149 100644
+--- a/dune/pdelab/multidomain/subproblemlocalfunctionspace.hh
++++ b/dune/pdelab/multidomain/subproblemlocalfunctionspace.hh
+@@ -171,6 +171,8 @@ public:
+                                              void, // we are not directly based on a node in the original tree
+                                              SubProblem> Traits;
+
++  typedef MDLFS MultiDomainLFS;
++
+ public:
+
+   //! \brief initialize with grid function space
+@@ -178,6 +180,7 @@ public:
+     : NodeT(stackobject_to_shared_ptr(mdlfs))
+     , BaseT(mdlfs.gridFunctionSpaceStorage())
+     , _subProblem(subProblem)
++    , _mdlfs(mdlfs)
+   {
+     bind();
+   }
+@@ -186,6 +189,7 @@ public:
+     : NodeT(mdlfs)
+     , BaseT(mdlfs.gridFunctionSpaceStorage())
+     , _subProblem(subProblem)
++    , _mdlfs(mdlfs)
+   {
+     bind();
+   }
+@@ -226,6 +230,11 @@ public:
+     return _subProblem;
+   }
+
++  const MDLFS& multiDomainLFS() const
++  {
++    return _mdlfs;
++  }
++
+   template<typename EG>
+   bool appliesTo(const EG& eg) const {
+     return _subProblem.appliesTo(eg);
+@@ -245,6 +254,7 @@ private:
+   }
+
+   const SubProblem& _subProblem;
++  const MDLFS& _mdlfs;
+
+ };
+
+@@ -467,12 +477,21 @@ class SubProblemLocalFunctionSpace<MDLFS,SubProblem,ChildIndex>
+                                            typename MDLFS::template Child<ChildIndex>::Type::ImplementationTag
+                                            > BaseT;
+
++  const MDLFS& _mdlfs;
++
+ public:
++  typedef MDLFS MultiDomainLFS;
+
+   SubProblemLocalFunctionSpace (const MDLFS& mdlfs, const SubProblem& subProblem)
+     : NodeT(mdlfs.template childStorage<ChildIndex>())
+     , BaseT(subProblem)
++    , _mdlfs(mdlfs)
++  {
++  }
++
++  const MDLFS& multiDomainLFS() const
+   {
++    return _mdlfs;
+   }
+
+   using NodeT::proxiedNode;

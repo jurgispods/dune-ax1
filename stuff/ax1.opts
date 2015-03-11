@@ -1,0 +1,2 @@
+CONFIGURE_FLAGS="--with-superlu --with-ug=/opt/UG_seq_patch8 --enable-fieldvector-size-is-method --with-hdf5=/usr"
+#CONFIGURE_FLAGS="--with-superlu CXX=\"gccfilter -c g++\" CC=\"gccfilter -c -r -w gcc\""

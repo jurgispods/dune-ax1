@@ -1,0 +1,16 @@
+membrane2 short description:
+
+Modeling a membrane (zero thickness) separating two electrolytes.
+
+Searching for stationary solutions, therefore solving the Poisson Boltzmann equation.
+
+One dimension (using OneDGrid) with constraints (Dirichlet BC).
+
+Convergence is investigated for increasing refinement levels by comparison to analytical solutions.
+
+new headers:
+
+tools.hh
+physics.hh
+membrane2_bctype.hh
+membrane2_bcextension.hh
