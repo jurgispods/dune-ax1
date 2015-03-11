@@ -16,7 +16,7 @@ However, if you have questions regarding the Dune framework in general, there is
 For rudimentary installation instructions, see [INSTALL.md](INSTALL.md). An even more rudimentary documentation can be found in [DOCUMENTATION.md](DOCUMENTATION.md), which mainly lists the compile- and run-time configuration options without giving any explanation of the code structure, class design or functionality. For this, please refer to the (largely undocumented) code or [contact me](http://conan.iwr.uni-heidelberg.de/people/jpods).
 
 # Copyright/license information
-This module is free software under the BSD 3-clause license. Copyright information can be found in the file [COPYING](COPYING), the used BSD 3-clause license in the file [BSD](BSD).
+This module is free software under the BSD 3-clause license. Copyright information is stated in the file [AUTHORS](AUTHORS), the used BSD 3-clause license can be found in [LICENSE](LICENSE).
 
 Please be aware that the other Dune modules required by this module may be licensed differently, so please make sure you satisfy the requirements of all modules when using the complete stack.
 
