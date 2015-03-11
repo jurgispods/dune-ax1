@@ -1,0 +1,25 @@
+The currently used, most up-to-date applications 'acme2_2d' and 'acme2_cyl' are known to work with this combination of Dune/PDELab modules:
+
+Version info below is outdated. Use git_version_info.dat for current info!
+
+Note: git_version_info.dat was generated with the following command:
+dune-common/bin/dunecontrol --opts=ax1_mac_parallel.opts --module=dune-ax1 git log -n 1 > dune-ax1/stuff/git_version_info.dat
+
+In detail:
+----------------------------
+
+dune-common: 7068
+dune-istl: 1737 (+ PATCH, see file 'istl_ax1.patch' in this folder! Not sure about '0001-RestartedGMRes-solver-Use-preconditioned-residual-fo.patch' though...)
+dune-geometry: 354
+dune-grid: 8701 (before all the dgfparser crap was introduced!)
+dune-localfunctions: 1127
+dune-pdelab: 2292 (last SVN version before conversion to Git) (+ PATCH, see file 'pdelab_ax1.patch') in this folder!
+
+dune-multidomain: 869e061... (+ PATCH, see file 'multidomain_ax1.patch' in this folder!)
+dune-multidomaingrid: f5245d...
+
+-----------------------------
+
+Patches are applied like this:
+$> cd dune-pdelab
+$> patch -p0 < ../dune-ax1/stuff/pdelab_ax1.patch

@@ -1,0 +1,14 @@
+acme1:
+
+One OneDGrid for the Poisson equation, two OneDGrid's for the Nernst-Planck equation representing the electrolyte subdomains
+
+This program allows for the solution of the Poisson-Nernst-Planck system with inclusing of a membrane. The two
+equation (system)s are solved alternately using an operator-split. This, however, limits the possible time step size
+to a very small value of 0.1 to 1 nano second.
+
+Numerical methods: 
+- Standard Galerkin (CG) local operator
+- Operator-split (alternating solution of the equations)
+
+Limitations:
+- operator-split is unstable (even when not using a membrane)

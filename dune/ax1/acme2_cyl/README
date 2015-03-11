@@ -1,0 +1,10 @@
+acme2:
+
+Going 2D!
+
+Numerical methods: 
+- Standard Galerkin (CG) local operators
+- Fully-coupled solution of the whole system including membrane
+
+Limitations:
+- 

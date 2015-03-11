@@ -1,0 +1,36 @@
+#!/bin/bash
+
+if [ $# -lt 1 ]
+then
+  echo "Error, please provide a directory to operate on!"
+else
+  folder=$1
+  if [[ "$folder" != */* ]]
+  then
+    folder=$folder/
+  fi
+  for filename_old in $folder*.old
+  do
+
+	fLength=${#filename_old}
+	#prefixLength=${#folder}
+	#suffixLength=4	
+	#tokenLength=fLength-prefixLength
+	
+	#echo "$fLength"
+	#echo "$prefixLength"
+	#echo "$suffixLength"
+	#echo "$tokenLength"
+	
+	#filename_old=${f:prefixLength:tokenLength}
+	
+	filename=${filename_old:0:fLength-4}
+
+   echo "Moving [$filename_old] > [$filename]"
+	
+	mv $filename_old $filename
+	
+  done
+fi
+
+

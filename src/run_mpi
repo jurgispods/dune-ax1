@@ -1,0 +1,13 @@
+#!/bin/bash
+
+np=$1
+
+configfile=$2
+logfile=`echo $configfile | sed -e 's/config/log/g'`
+logfile=`echo $logfile | sed -e "s/.log/_p${np}.log/g"`
+
+echo "Using config file: $configfile"
+echo "Using log file: $logfile"
+echo "Starting simulation using $np processes!"
+
+sh -c "( (nohup mpirun -bind-to-core -report-bindings -np $np ./acme2_cyl_par_mori 0 1 20e3 $configfile 2>&1 >$logfile </dev/null) & )"

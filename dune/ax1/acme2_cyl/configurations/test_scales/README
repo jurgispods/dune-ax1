@@ -1,0 +1,1 @@
+This is separate configuration to test the realistically scaled system (TIME_SCALE != 1, LENGTH_SCALE != 1) normally called by setting up the 'default' configuration without having to modify it.
