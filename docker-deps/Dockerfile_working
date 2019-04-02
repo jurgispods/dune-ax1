@@ -1,0 +1,38 @@
+FROM gcc-4.7
+
+RUN mkdir /dune
+WORKDIR /dune
+
+RUN g++ --version
+
+RUN git clone https://github.com/dune-project/dune-common.git
+RUN cd dune-common && git checkout 5b0bdc28589f4d66b8b56c6a4d781cf19f10774f && cd ..
+RUN git clone https://github.com/dune-project/dune-geometry.git
+RUN cd dune-geometry && git checkout 3dafcc20186428e9669a90d69eae3bcc8b08d9a1 && cd ..
+RUN git clone https://github.com/dune-project/dune-grid.git
+RUN cd dune-grid  && git checkout 12091a82828433ab050c70c0a87e643197993f97 && cd ..
+RUN git clone https://github.com/dune-project/dune-istl.git
+RUN cd dune-istl && git checkout 35b879c3f0d003dcbe743c7ca84f6142751c6b48 && cd ..
+RUN git clone https://github.com/dune-project/dune-localfunctions.git
+RUN cd dune-localfunctions && git checkout 25a1116ad55bc183ecd5d66232564c85c22cb455 && cd ..
+RUN git clone https://github.com/dune-project/dune-typetree.git
+RUN cd dune-typetree && git checkout  6730ea7fd6c44b6206555e664be071c40dc10b48 && cd ..
+RUN git clone https://github.com/dune-project/dune-pdelab.git
+RUN cd dune-pdelab && git checkout  9f4d7a979c5369cfe2232d77e034253202f69a8b && cd ..
+RUN git clone https://github.com/smuething/dune-multidomaingrid.git
+RUN cd dune-multidomaingrid && git checkout 406c5c750650ebaf1b5811e9fb6012899b238064 && cd ..
+RUN git clone https://github.com/smuething/dune-multidomain.git
+RUN cd dune-multidomain && git checkout 2aa14eeb57d3f94563b926c637ebfe9235112c9d && cd ..
+ADD stuff/ax1_docker.opts /dune/ax1.opts
+RUN dune-common/bin/dunecontrol --no-cmake --module=dune-multidomain --opts=ax1.opts all
+
+ADD . /dune/dune-ax1
+RUN cd dune-pdelab && patch -p1 < ../dune-ax1/stuff/pdelab_ax1.patch && cd ..
+
+RUN dune-common/bin/dunecontrol --no-cmake --only=dune-ax1 --opts=ax1.opts all || true
+RUN ls -al dune-ax1/src
+
+RUN mkdir -p /dune/output
+RUN mkdir -p /dune/simulation_states
+
+ENTRYPOINT ["/bin/bash"]

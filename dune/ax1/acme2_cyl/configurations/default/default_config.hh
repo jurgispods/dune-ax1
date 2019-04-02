@@ -62,7 +62,7 @@ class DefaultConfiguration
       using ELEC_OPERATOR = Acme2CylOperatorFullyCoupled<PARAM_CON,PARAM_POT,FEM_CON,FEM_POT,useMembContributions>;
 
       static const bool useMembraneContributions = true;
-      static const bool useImplicitMembraneFlux = true;
+      static const bool useImplicitMembraneFlux = true; // ### change here if necessary
     };
 
 

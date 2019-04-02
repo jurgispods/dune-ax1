@@ -8,7 +8,6 @@
 /*/*~
 /*/core
 /Debug
-/am
 /aclocal.m4
 /am
 /config.guess
@@ -20,7 +19,7 @@
 /ltmain.sh
 /missing
 /.*.sw[nop]
-/.deps
+**/.deps
 /.dirstamp
 /.gitignore
 /.libs
@@ -29,8 +28,8 @@
 /GSYMS
 /GTAGS
 /ID
-/Makefile
-/Makefile.in
+**/Makefile
+**/Makefile.in
 /TAGS
 /_libs
 /autom4te.cache
@@ -47,4 +46,13 @@
 /so_locations
 /stamp-h1
 /tags
-
+.vscode/
+.ipynb_checkpoints/
+/output
+/output-*
+compile
+.idea/
+cmake-build-debug/
+files-*
+*.ipynb
+dune-info.dat

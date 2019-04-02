@@ -1,0 +1,64 @@
+FROM braintwister/ubuntu-16.04
+
+#RUN apt-get update && apt-get install -y software-properties-common build-essential
+
+RUN apt-add-repository -y ppa:ubuntu-toolchain-r/test \
+ && apt-get update \
+ && apt-get install -y --no-install-recommends \
+    gcc-4.7 \
+    g++-4.7 \
+    gdb \
+    linux-tools-generic \
+    patch \
+    pkg-config \
+    autotools-dev \
+    autoconf \
+    libtool \
+    m4 \
+    automake \
+    gfortran \
+    libblas-dev \
+    liblapack-dev \
+    csh \
+    zlib1g-dev \
+    less \
+    nano \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/* \
+ && ln -sf /usr/bin/g++-4.7 /usr/bin/g++ \
+ && ln -sf /usr/bin/gcc-4.7 /usr/bin/gcc
+
+ENV CC gcc
+ENV CXX g++
+
+# Install OpenMPI
+ENV OPENMPI_VERSION 1.8.8
+RUN wget https://download.open-mpi.org/release/open-mpi/v1.8/openmpi-${OPENMPI_VERSION}.tar.gz \
+  && gunzip -c openmpi-${OPENMPI_VERSION}.tar.gz | tar xf - \
+  && cd openmpi-${OPENMPI_VERSION} \
+  && ./configure --prefix=/usr/local \
+  && make all install  
+ENV LD_LIBRARY_PATH /usr/local/lib
+
+RUN apt-get update && apt-get install -y clang
+
+# Install parallel HDF5
+RUN wget https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.8/hdf5-1.8.1/src/hdf5-1.8.1.tar.gz \
+  && gunzip -c hdf5-1.8.1.tar.gz | tar xf - \
+  && cd hdf5-1.8.1 \
+  && CC=clang ./configure --enable-parallel --prefix=/usr/local \
+  && make \
+  && make install
+  
+# Install SuperLU
+ADD superlu-make.linux /superlu-make.linux
+RUN cd / \
+  && wget https://crd-legacy.lbl.gov/~xiaoye/SuperLU/superlu_4.3.tar.gz \
+  && gunzip -c superlu_4.3.tar.gz | tar xf - \
+  && cd SuperLU_4.3 \
+  && mv /superlu-make.linux make.inc \
+  && cat make.inc \
+  && make blaslib \  
+  && make \
+  && cd ..
+  

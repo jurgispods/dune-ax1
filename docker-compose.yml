@@ -1,0 +1,6 @@
+dune-ax1:
+  image: dune-ax1
+  container_name: dune-ax1
+  volumes:
+#   - /tmp/dune-ax1/output:/dune/output:delegated
+   - /tmp/dune-ax1/simulation_states:/dune/simulation_states:delegated

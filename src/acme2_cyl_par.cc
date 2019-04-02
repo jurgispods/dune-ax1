@@ -97,8 +97,8 @@
 #include <dune/ax1/acme2_cyl/common/acme2_cyl_physics.hh>
 #include <dune/ax1/acme2_cyl/common/acme2_cyl_parametertree.hh>
 #include <dune/ax1/acme2_cyl/common/acme2_cyl_setup.hh>
-#include <dune/ax1/acme2_cyl/common/acme2_cyl_mori_setup.hh>
-#include <dune/ax1/acme2_cyl/common/laplace_setup.hh>
+//#include <dune/ax1/acme2_cyl/common/acme2_cyl_mori_setup.hh>
+//#include <dune/ax1/acme2_cyl/common/laplace_setup.hh>
 #include <dune/ax1/channels/channel_builder.hh>
 #include <dune/ax1/common/ax1_lfs_tools.hh>
 #include <dune/ax1/common/ax1_parallelhelper.hh>
@@ -129,27 +129,27 @@ void run(Grid& grid, Acme2CylParameters& params, Config& config, GV& gv, double 
   debug_verb << "poissonConstant: " << physics.getPoissonConstant() << std::endl;
   debug_verb << "==============================================" << std::endl;
 
-#ifdef USE_LAPLACE_OPERATOR
-  // Set up and start simulation
-  LaplaceSetup<Grid,GV,PHYSICS,SubGV> laplaceSetup(grid, gv, physics, elecGV, membGV);
-  laplaceSetup.setup(dtstart, tend);
-#else
-#ifdef USE_MORI_OPERATOR_SPLIT
-  if(! params.general.get("useMoriOperatorSplit",false))
-  {
-    DUNE_THROW(Dune::Exception, "You are using the operator-split executable, please set flag "
-        << "'useMoriOperatorSplit = yes' in config file!");
-  }
-
-  // Set up and start simulation
-  Acme2CylMoriSetup<Grid,GV,PHYSICS,SubGV> acme2_cylMoriSetup(grid, gv, physics, elecGV, membGV);
-  acme2_cylMoriSetup.setup(dtstart, tend);
-#else
+//#ifdef USE_LAPLACE_OPERATOR
+//  // Set up and start simulation
+//  LaplaceSetup<Grid,GV,PHYSICS,SubGV> laplaceSetup(grid, gv, physics, elecGV, membGV);
+//  laplaceSetup.setup(dtstart, tend);
+//#else
+//#ifdef USE_MORI_OPERATOR_SPLIT
+//  if(! params.general.get("useMoriOperatorSplit",false))
+//  {
+//    DUNE_THROW(Dune::Exception, "You are using the operator-split executable, please set flag "
+//        << "'useMoriOperatorSplit = yes' in config file!");
+//  }
+//
+//  // Set up and start simulation
+//  Acme2CylMoriSetup<Grid,GV,PHYSICS,SubGV> acme2_cylMoriSetup(grid, gv, physics, elecGV, membGV);
+//  acme2_cylMoriSetup.setup(dtstart, tend);
+//#else
     // Set up and start simulation
     Acme2CylSetup<Grid,GV,PHYSICS,SubGV> acme2_cylSetup(grid, gv, physics, elecGV, membGV);
     acme2_cylSetup.setup(dtstart, tend);
-#endif
-#endif
+//#endif
+//#endif
 }
 
 void handler(int sig) {
@@ -549,23 +549,23 @@ int main(int argc, char** argv)
     bool configFound = false;
     std::string configName = params.getConfigName();
 
-#ifdef USE_LAPLACE_OPERATOR
-    if(configName == "laplace")
-        {
-          LaplaceConfiguration<double> config;
-          run(grid,params,config,gv,dtstart,tend,
-              elemSubdomainMapper,elemGroupMapper,elecGV,membGV);
-          configFound = true;
-        }
-#else
-    if(configName == "mori")
-    {
-      MoriConfiguration<double> config(params);
-      run(grid,params,config,gv,dtstart,tend,
-          elemSubdomainMapper,elemGroupMapper,elecGV,membGV);
-      configFound = true;
-    }
-  #ifndef USE_MORI_OPERATOR_SPLIT
+//#ifdef USE_LAPLACE_OPERATOR
+//    if(configName == "laplace")
+//        {
+//          LaplaceConfiguration<double> config;
+//          run(grid,params,config,gv,dtstart,tend,
+//              elemSubdomainMapper,elemGroupMapper,elecGV,membGV);
+//          configFound = true;
+//        }
+//#else
+//    if(configName == "mori")
+//    {
+//      MoriConfiguration<double> config(params);
+//      run(grid,params,config,gv,dtstart,tend,
+//          elemSubdomainMapper,elemGroupMapper,elecGV,membGV);
+//      configFound = true;
+//    }
+//  #ifndef USE_MORI_OPERATOR_SPLIT
     if(configName == "default")
     {
       DefaultConfiguration<double> config(params);
@@ -597,8 +597,8 @@ int main(int argc, char** argv)
       configFound = true;
     }
     */
-  #endif
-#endif
+//  #endif
+//#endif
 
     if(! configFound)
     {
