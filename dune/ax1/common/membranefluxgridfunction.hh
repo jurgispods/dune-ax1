@@ -243,7 +243,7 @@ public:
     // This function is currently not used. If we ever use it, we for now assume that it is
     // consistent with the solutionContainer. If this should not be the case, we have to
     // think about how to use this consistently!
-    assert(u == *solutionContainer.getSolutionPot());
+    assert(u == *solutionContainer.getSolutionPotOld()); // old/new?
     updateState();
   }
 
@@ -272,8 +272,8 @@ public:
     // We can now use the newtonSolution's pointer to the current solution vector
     // instead of the solution from the last time step. Implement this for a truly
     // fully-implicit numerical method!
-    DGF_POT dgfPotNew(solutionContainer.getGfsPot(), *solutionContainer.getSolutionPot());
-    typename DGF_CON::BASE_DGF dgfConElecNew(solutionContainer.getGfsCon(), *solutionContainer.getSolutionCon());
+    DGF_POT dgfPotNew(solutionContainer.getGfsPot(), *solutionContainer.getSolutionPotNew());
+    typename DGF_CON::BASE_DGF dgfConElecNew(solutionContainer.getGfsCon(), *solutionContainer.getSolutionConNew());
     DGF_CON dgfConNew(dgfCon.getGridView(), dgfConElecNew, physics);
 
     const std::vector<bool> membraneActive = physics.getParams().isMembraneActive();
@@ -463,8 +463,8 @@ public:
     // We can now use the newtonSolution's pointer to the current solution vector
     // instead of the solution from the last time step. Implement this for a truly
     // fully-implicit numerical method!
-    DGF_POT dgfPotNew(solutionContainer.getGfsPot(), *solutionContainer.getSolutionPot());
-    typename DGF_CON::BASE_DGF dgfConElecNew(solutionContainer.getGfsCon(), *solutionContainer.getSolutionCon());
+    DGF_POT dgfPotNew(solutionContainer.getGfsPot(), *solutionContainer.getSolutionPotNew());
+    typename DGF_CON::BASE_DGF dgfConElecNew(solutionContainer.getGfsCon(), *solutionContainer.getSolutionConNew());
     DGF_CON dgfConNew(dgfCon.getGridView(), dgfConElecNew, physics);
 
     // Iterate over all membrane interfaces and calculate flux

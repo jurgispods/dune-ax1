@@ -1,0 +1,2 @@
+#CONFIGURE_FLAGS="--enable-parallel --with-superlu --with-boost=/home/jpods/workspace/boost-1.50 --enable-fieldvector-size-is-method --with-hdf5=/home/jpods/workspace/hdf5-1.8.11-parallel --with-hdf5-libs=-lz"
+CONFIGURE_FLAGS="--enable-parallel --enable-fieldvector-size-is-method --with-superlu=/dune/SuperLU_4.3 --with-superlu-lib=libsuperlu_4.3.a --with-hdf5=/usr/local --with-hdf5-libs=-lz"

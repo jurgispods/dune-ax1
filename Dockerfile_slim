@@ -1,0 +1,26 @@
+FROM pederpansen/dune-ax1 AS build
+
+RUN \        
+        mkdir -p /tmp/fakeroot/lib  && \
+        cp $(ldd /dune/dune-ax1/src/acme2_cyl_par | grep -o '/.\+\.so[^ ]*' | sort | uniq) /tmp/fakeroot/lib && \
+        for lib in /tmp/fakeroot/lib/*; do strip --strip-all $lib; done && \
+        mkdir -p /tmp/fakeroot/bin && \
+        cp -r /dune/dune-ax1/src/acme2_cyl_par /tmp/fakeroot/bin/ && \
+        cp -r /usr/local/bin/* /tmp/fakeroot/bin/ && \
+        cp -r /usr/local/share/openmpi /tmp/fakeroot/share/
+
+FROM debian:stable-slim
+
+COPY --from=0 /tmp/fakeroot/ /
+RUN export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/lib"
+
+RUN mkdir -p /dune/config
+RUN mkdir -p /dune/output
+RUN mkdir -p /dune/simulation_states
+
+ADD src/config /dune/config
+ADD src/simulation_states/equilibrium/cyl/yasp_square10mm.dgf /dune/simulation_states
+ADD src/simulation_states/equilibrium/cyl/yasp_square10mm_p0.dat /dune/simulation_states
+
+#ENTRYPOINT ["/dune/run.sh"]
+ENTRYPOINT ["bash"]

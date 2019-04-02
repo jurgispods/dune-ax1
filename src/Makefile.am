@@ -1,10 +1,12 @@
-noinst_PROGRAMS = acme2_2d \
-						acme2_cyl_par \
-						acme2_cyl_par_mme \
-						acme2_cyl_par_laplace \
-						acme2_cyl_par_mori \
-						aggregate_fluxes \
-						eval_grids
+noinst_PROGRAMS = acme2_cyl_par
+
+#noinst_PROGRAMS = acme2_2d \
+#						acme2_cyl_par \
+#						acme2_cyl_par_mme \
+#						acme2_cyl_par_laplace \
+#						acme2_cyl_par_mori \
+#						aggregate_fluxes \
+#						eval_grids
 
 #example01_SOURCES = example01.cc
 #example02_SOURCES = example02.cc
@@ -30,8 +32,9 @@ eval_grids_SOURCES    = eval_grids.cc
 
 
 # Choose your compiler here (g++ or clang++)
-#CXX=g++ -std=c++11
-CXX=clang++ -std=c++11
+CXX=g++ -std=c++11 
+#CXX=clang++ -std=c++11
+#CXX=/opt/local/bin/mpic++ -std=c++11
 
 # Use clang++ with gcc stdlib (Wrapper by Steffen); note: had to deactivate port 'hdf5-18' from MacPorts do get this to work, as otherwise there are two hdf5.hh in the include path and the one from MacPorts takes preference!
 #CXX=clang++-gcc -std=c++11
@@ -102,7 +105,7 @@ acme2_2d_CPPFLAGS = $(AM_CPPFLAGS) $(UG_CPPFLAGS) $(DUNEMPICPPFLAGS) $(HDF5_CPPF
 #acme2_cyl_par_CPPFLAGS = $(AM_CPPFLAGS) $(UG_CPPFLAGS) $(DUNEMPICPPFLAGS) $(HDF5_CPPFLAGS) -DUSE_CYLINDER_COORDS -DAX1_PARALLEL -UMULTIPLE_MEMBRANE_ELEMENTS -DAX1_USE_JACOBIAN_METHODS_IN_OPERATOR #-DNDEBUG
 
 # Parallel version of acme2_cyl
-acme2_cyl_par_CPPFLAGS = $(AM_CPPFLAGS) $(DUNEMPICPPFLAGS) $(HDF5_CPPFLAGS) -DUSE_CYLINDER_COORDS -DAX1_PARALLEL -UMULTIPLE_MEMBRANE_ELEMENTS -DAX1_USE_JACOBIAN_METHODS_IN_OPERATOR #-DNDEBUG
+acme2_cyl_par_CPPFLAGS = $(AM_CPPFLAGS) $(DUNEMPICPPFLAGS) $(HDF5_CPPFLAGS) -DUSE_CYLINDER_COORDS -DAX1_PARALLEL -UMULTIPLE_MEMBRANE_ELEMENTS -DAX1_USE_JACOBIAN_METHODS_IN_OPERATOR -DHAVE_INITIALIZER_LIST #-DNDEBUG
 
 # Multiple membrane elements in acme2_cyl_par
 acme2_cyl_par_mme_CPPFLAGS = $(AM_CPPFLAGS) $(DUNEMPICPPFLAGS) $(HDF5_CPPFLAGS) -DUSE_CYLINDER_COORDS -DAX1_PARALLEL -DMULTIPLE_MEMBRANE_ELEMENTS #-DNDEBUG

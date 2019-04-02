@@ -157,7 +157,7 @@ public:
     {
       DUNE_THROW(Dune::NotImplemented, "updateState(u) currently not supported. Use updateState() instead and make"
         << " sure that solutionContainer contains the desired solution vector(s)!");
-      assert(u == *solutionContainer.getSolutionPot());
+      assert(u == *solutionContainer.getSolutionPotOld()); // old/new?
       updateState();
     }
 
@@ -177,8 +177,8 @@ public:
         // We can now use the newtonSolution's pointer to the current solution vector
         // instead of the solution from the last time step. Implement this for a truly
         // fully-implicit numerical method!
-        DGF_POT dgfPotNew(solutionContainer.getGfsPot(), *solutionContainer.getSolutionPot());
-        typename DGF_CON::BASE_DGF dgfConElecNew(solutionContainer.getGfsCon(), *solutionContainer.getSolutionCon());
+        DGF_POT dgfPotNew(solutionContainer.getGfsPot(), *solutionContainer.getSolutionPotNew());
+        typename DGF_CON::BASE_DGF dgfConElecNew(solutionContainer.getGfsCon(), *solutionContainer.getSolutionConNew());
         DGF_CON dgfConNew(dgfCon.getGridView(), dgfConElecNew, physics);
 
         const std::vector<bool> membraneActive = physics.getParams().isMembraneActive();
@@ -302,8 +302,8 @@ public:
         // We can now use the newtonSolution's pointer to the current solution vector
         // instead of the solution from the last time step. Implement this for a truly
         // fully-implicit numerical method!
-        DGF_POT dgfPotNew(solutionContainer.getGfsPot(), *solutionContainer.getSolutionPot());
-        typename DGF_CON::BASE_DGF dgfConElecNew(solutionContainer.getGfsCon(), *solutionContainer.getSolutionCon());
+        DGF_POT dgfPotNew(solutionContainer.getGfsPot(), *solutionContainer.getSolutionPotNew());
+        typename DGF_CON::BASE_DGF dgfConElecNew(solutionContainer.getGfsCon(), *solutionContainer.getSolutionConNew());
         DGF_CON dgfConNew(dgfCon.getGridView(), dgfConElecNew, physics);
 
         // Iterate over all membrane interfaces and calculate flux
