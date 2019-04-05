@@ -27,7 +27,9 @@ It does not (yet) contain further simulations setups from my PhD thesis or the 2
 
 ## Download simulation data
 
-Please check out my [Zenodo project](http://dx.doi.org/10.5281/zenodo.15981) containing releases from this repository and (soon) raw simulation data in gnuplot and HDF5 format.
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2627502.svg)](https://doi.org/10.5281/zenodo.2627502)
+
+Please check out my [Zenodo project](https://doi.org/10.5281/zenodo.2627502) containing raw simulation data in HDF5 format.
 
 ## Install from source
 
