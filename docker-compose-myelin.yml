@@ -1,8 +1,9 @@
-dune-ax1:
+dune-ax1-myelin:
   image: pederpansen/dune-ax1
-  container_name: dune-ax1
+  container_name: dune-ax1-myelin
   stdin_open: true # docker run -i
   tty: true        # docker run -t
+  command: ["acme2_cyl_par_myelin", "0", "1", "20e3", "config/acme2_cyl_par_fiona_myelin_48mmx10mm_48nodes_highChannelDensity_rightConCytosolBoundaryNeumann.config", "8"]
   volumes:
 #   - /tmp/dune-ax1/output:/dune/output:delegated
    - /tmp/dune-ax1/simulation_states:/dune/simulation_states:delegated
