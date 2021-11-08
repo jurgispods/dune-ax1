@@ -24,8 +24,16 @@ else
     exit 1
   fi    
 fi
+n_proc="10"
+if [ -z "$2" ]
+then
+  echo "Number of processors not specified. Using default $n_proc"
+else
+  n_proc="$2"
+fi
+
 
 cd /dune/dune-ax1/src
 
-echo "Starting simulation using 10 processes."
-mpirun --allow-run-as-root -np 10 $dir/acme2_cyl_par 0 1 20e3 $config 
+echo "Starting simulation using $n_proc processes."
+mpirun --allow-run-as-root -np $n_proc $dir/acme2_cyl_par 0 1 20e3 $config

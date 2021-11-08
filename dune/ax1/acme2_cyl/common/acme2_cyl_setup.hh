@@ -746,6 +746,7 @@ class Acme2CylSetup
       //typedef Dune::PDELab::ISTLBackend_OVLP_GMRES_ILU0<typename Traits::MultiGFS,CC> LS;
       //LS ls(multigfs,cc,maxLinIt,5,40,true);
 #else
+    #ifndef USE_GMRES
       //typedef Dune::PDELab::ISTLBackend_OVLP_BCGS_ILU0<typename Traits::MultiGFS,CC> LS;
       //LS ls(multigfs,cc,maxLinIt,5);
       typedef Dune::PDELab::ISTLBackend_OVLP_BCGS_ILUn<typename Traits::MultiGFS,CC> LS;
