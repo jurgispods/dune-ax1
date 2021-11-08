@@ -757,9 +757,11 @@ class Acme2CylSetup
       //LS ls(multigfs,cc,maxLinIt,5,40,true);
       //typedef Dune::PDELab::ISTLBackend_BCGS_AMG_ILU0<IGO> LS;
       //LS ls(multigfs,maxLinIt,5);
+    #else
       // This is the preferred preconditioner/linear solver combination for 'hard' parallel problems
-      //typedef Dune::PDELab::ISTLBackend_GMRES_AMG_ILU0<IGO> LS;
-      //LS ls(multigfs,maxLinIt,5);
+      typedef Dune::PDELab::ISTLBackend_GMRES_AMG_ILU0<IGO> LS;
+      LS ls(multigfs,maxLinIt,5);
+    #endif
 
 //      typename LS::Parameters amgParams(ls.parameters());
 //      amgParams.setAccumulate(Dune::Amg::atOnceAccu);
