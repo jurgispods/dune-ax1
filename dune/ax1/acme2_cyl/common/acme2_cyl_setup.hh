@@ -746,7 +746,19 @@ class Acme2CylSetup
       //typedef Dune::PDELab::ISTLBackend_OVLP_GMRES_ILU0<typename Traits::MultiGFS,CC> LS;
       //LS ls(multigfs,cc,maxLinIt,5,40,true);
 #else
-    #ifndef USE_GMRES
+    #ifdef USE_GMRES_SOLVER
+      // This is the preferred preconditioner/linear solver combination for 'hard' parallel problems
+      typedef Dune::PDELab::ISTLBackend_GMRES_AMG_ILU0<IGO> LS;
+      LS ls(multigfs,maxLinIt,5);
+      debug_info << "Using linear solver Dune::PDELab::ISTLBackend_GMRES_AMG_ILU0" << std::endl;
+
+      typename LS::Parameters amgParams(ls.parameters());
+      amgParams.setAccumulate(Dune::Amg::atOnceAccu);
+      amgParams.setDefaultValuesAnisotropic(Grid::dimension);
+      amgParams.setSkipIsolated(true);
+      ls.setParameters(amgParams);
+      Tools::printAmgParams(ls.parameters());
+    #else
       //typedef Dune::PDELab::ISTLBackend_OVLP_BCGS_ILU0<typename Traits::MultiGFS,CC> LS;
       //LS ls(multigfs,cc,maxLinIt,5);
       typedef Dune::PDELab::ISTLBackend_OVLP_BCGS_ILUn<typename Traits::MultiGFS,CC> LS;
@@ -757,18 +769,7 @@ class Acme2CylSetup
       //LS ls(multigfs,cc,maxLinIt,5,40,true);
       //typedef Dune::PDELab::ISTLBackend_BCGS_AMG_ILU0<IGO> LS;
       //LS ls(multigfs,maxLinIt,5);
-    #else
-      // This is the preferred preconditioner/linear solver combination for 'hard' parallel problems
-      typedef Dune::PDELab::ISTLBackend_GMRES_AMG_ILU0<IGO> LS;
-      LS ls(multigfs,maxLinIt,5);
     #endif
-
-//      typename LS::Parameters amgParams(ls.parameters());
-//      amgParams.setAccumulate(Dune::Amg::atOnceAccu);
-//      amgParams.setDefaultValuesAnisotropic(Grid::dimension);
-//      amgParams.setSkipIsolated(true);
-//      ls.setParameters(amgParams);
-//      Tools::printAmgParams(ls.parameters());
 #endif
 #else
       assert(gv.grid().overlapSize(0) == 0);
@@ -808,9 +809,12 @@ class Acme2CylSetup
       //typedef Dune::PDELab::ISTLBackend_SEQ_SuperLU LS;
       //LS ls(5); // verbose = 1
 #endif
+#ifndef USE_GMRES_SOLVER
       // This is a huge, fully demangled type name and therefore looks annoying in the output;
       // but it is very important to know which linear solver was used!
+      // (throws exception when using GMRes solver)
       debug_info << "Using linear solver " << Tools::getTypeName(ls) << std::endl;
+#endif      
 #if 1
       // ==============================================================================================
 

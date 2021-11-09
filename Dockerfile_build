@@ -54,21 +54,21 @@ RUN wget https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.8/hdf5-1.8.1/src/
   && cd .. \
   && rm -rf hdf5-1.8.1*
   
+RUN mkdir /dune
+WORKDIR /dune
+
 # Install SuperLU
-ADD docker-deps/superlu-make.linux /superlu-make.linux
-RUN cd / \
+ADD docker-deps/superlu-make.linux /dune/superlu-make.linux
+RUN cd /dune \
   && wget https://crd-legacy.lbl.gov/~xiaoye/SuperLU/superlu_4.3.tar.gz \
   && gunzip -c superlu_4.3.tar.gz | tar xf - \
   && cd SuperLU_4.3 \
-  && mv /superlu-make.linux make.inc \
+  && mv /dune/superlu-make.linux make.inc \
   && cat make.inc \
   && make blaslib \  
   && make \
   && cd .. \
   && rm -rf superlu_4.3.tar.gz
-
-RUN mkdir /dune
-WORKDIR /dune
 
 RUN git clone https://github.com/dune-project/dune-common.git
 RUN cd dune-common && git checkout 5b0bdc28589f4d66b8b56c6a4d781cf19f10774f && cd ..
