@@ -97,6 +97,7 @@ RUN cd dune-pdelab && patch -p1 < ../dune-ax1/stuff/pdelab_ax1.patch && cd ..
 RUN dune-common/bin/dunecontrol --no-cmake --only=dune-ax1 --opts=ax1.opts all || true
 RUN rm dune-ax1/src/acme2_2d-acme2_cyl_par.o || true
 RUN ls -al dune-ax1/src/acme2_cyl_par
+RUN ls -al dune-ax1/src/acme2_cyl_par_myelin
 
 RUN mkdir -p /dune/output
 RUN mkdir -p /dune/simulation_states

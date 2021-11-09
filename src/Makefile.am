@@ -1,4 +1,5 @@
-noinst_PROGRAMS = acme2_cyl_par
+noinst_PROGRAMS = acme2_cyl_par \
+						acme2_cyl_par_myelin
 
 #noinst_PROGRAMS = acme2_2d \
 #						acme2_cyl_par \
@@ -25,6 +26,7 @@ noinst_PROGRAMS = acme2_cyl_par
 acme2_2d_SOURCES    = acme2_cyl_par.cc
 acme2_cyl_par_SOURCES    = acme2_cyl_par.cc
 acme2_cyl_par_mme_SOURCES    = acme2_cyl_par.cc
+acme2_cyl_par_myelin_SOURCES    = acme2_cyl_par.cc
 acme2_cyl_par_laplace_SOURCES    = acme2_cyl_par.cc
 acme2_cyl_par_mori_SOURCES    = acme2_cyl_par.cc
 aggregate_fluxes_SOURCES    = aggregate_fluxes.cc
@@ -78,6 +80,10 @@ acme2_cyl_par_mme_LDADD = $(acme2_cyl_par_LDADD)
 acme2_cyl_par_mme_LDFLAGS = $(acme2_cyl_par_LDFLAGS)
 acme2_cyl_par_mme_CXXFLAGS = $(acme2_cyl_par_CXXFLAGS)
 
+acme2_cyl_par_myelin_LDADD = $(acme2_cyl_par_LDADD)
+acme2_cyl_par_myelin_LDFLAGS = $(acme2_cyl_par_LDFLAGS)
+acme2_cyl_par_myelin_CXXFLAGS = $(acme2_cyl_par_CXXFLAGS)
+
 acme2_cyl_par_laplace_LDADD = $(acme2_cyl_par_LDADD)
 acme2_cyl_par_laplace_LDFLAGS = $(acme2_cyl_par_LDFLAGS)
 acme2_cyl_par_laplace_CXXFLAGS = $(acme2_cyl_par_CXXFLAGS)
@@ -109,6 +115,9 @@ acme2_cyl_par_CPPFLAGS = $(AM_CPPFLAGS) $(DUNEMPICPPFLAGS) $(HDF5_CPPFLAGS) -DUS
 
 # Multiple membrane elements in acme2_cyl_par
 acme2_cyl_par_mme_CPPFLAGS = $(AM_CPPFLAGS) $(DUNEMPICPPFLAGS) $(HDF5_CPPFLAGS) -DUSE_CYLINDER_COORDS -DAX1_PARALLEL -DMULTIPLE_MEMBRANE_ELEMENTS #-DNDEBUG
+
+# Parallel version of acme2_cyl with myelination
+acme2_cyl_par_myelin_CPPFLAGS = $(AM_CPPFLAGS) $(DUNEMPICPPFLAGS) $(HDF5_CPPFLAGS) -DUSE_CYLINDER_COORDS -DAX1_PARALLEL -UMULTIPLE_MEMBRANE_ELEMENTS -DAX1_USE_JACOBIAN_METHODS_IN_OPERATOR -DHAVE_INITIALIZER_LIST -DUSE_GMRES_SOLVER #-DNDEBUG
 
 # Use plain Laplace operator instead of PNP in acme2_cyl_par
 acme2_cyl_par_laplace_CPPFLAGS = $(AM_CPPFLAGS) $(DUNEMPICPPFLAGS) $(HDF5_CPPFLAGS) -DUSE_CYLINDER_COORDS -DAX1_PARALLEL -DUSE_LAPLACE_OPERATOR #-DNDEBUG

@@ -1,0 +1,22 @@
+name: Build Docker image
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+
+  build:
+    name: Build Docker image
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Build the 'dune-ax1:dev' Docker image
+      run: docker build . --file Dockerfile_build --tag pederpansen/dune-ax1:dev
+      
+    - name: Build the 'dune-ax1:latest' Docker image
+      run: docker build . --file Dockerfile --tag pederpansen/dune-ax1:$(date +%s) --tag pederpansen/dune-ax1:latest
+

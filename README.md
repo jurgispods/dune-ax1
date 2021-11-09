@@ -21,7 +21,7 @@ However, if you have questions regarding the Dune framework in general, there is
 
 [![docker build](https://img.shields.io/docker/cloud/automated/pederpansen/dune-ax1.svg)](https://hub.docker.com/r/pederpansen/dune-ax1) [![docker build](https://img.shields.io/docker/cloud/build/pederpansen/dune-ax1.svg)](https://hub.docker.com/r/pederpansen/dune-ax1)
 
-The main simulation from my [2013 paper](http://dx.doi.org/10.1016/j.bpj.2013.05.041) can be pulled and run as a Docker image. See [DOCKER.md](DOCKER.ms) for details.
+The main simulation from my [2013 paper](http://dx.doi.org/10.1016/j.bpj.2013.05.041) can be pulled and run as a Docker image. See [DOCKER.md](DOCKER.md) for details.
 
 It does not (yet) contain further simulations setups from my PhD thesis or the 2016 paper. If you are interested in those, please open an issue.
 
